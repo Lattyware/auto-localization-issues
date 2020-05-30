@@ -1,0 +1,10 @@
+name: "Auto Localization Issues"
+description: "Automatically manage issues for localization of strings in the application."
+inputs:
+  token:
+    description: "The token for the repository to manage issues in."
+    required: true
+    default: ${{ github.token }}
+runs:
+  using: 'node12'
+  main: 'index.js'
