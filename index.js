@@ -5,7 +5,7 @@ const fs = require("fs").promises;
 
 const createOrUpdateIssueFor = async (octokit, language, missing) => {
   const context = github.context;
-
+  
   const title = `Update ${language} Localization`;
 
   const issueNeeded = missing.length > 0;
@@ -58,9 +58,10 @@ const createOrUpdateIssueFor = async (octokit, language, missing) => {
 
 const main = async () => {
   const token = core.getInput("token");
+  const workspace = process.env["GITHUB_WORKSPACE"];
   const octokit = new github.GitHub(token);
 
-  const dirPath = "client/src/elm/MassiveDecks/Strings/Languages";
+  const dirPath = workspace + "/client/src/elm/MassiveDecks/Strings/Languages";
   const missingRegex = /^\s*(\w+)\s*->\s*\n\s*\[\s*Missing\s*\]\s*$/gm;
   const nameRegex = /^\s*,\s*name\s*=\s*(\w+)\s*$/gm;
 
@@ -96,5 +97,7 @@ const main = async () => {
 };
 
 main().catch((error) => {
-  core.setFailed(error.message);
+  core.error(error);
+  core.error(error.stack)
+  core.setFailed(`Exception while executing: ${error.message}`);
 });
